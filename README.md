@@ -24,6 +24,14 @@ DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OL
 | Embedded   | SQLite, SolidDB   | DuckDB                |
 | Standalone | Mysql, Postgresql | Snowflake, clickhouse |
 
+## What are the limits of duckdb
+
+- runs on single machine(single process per db), not a distributed system. As a result, no horizontal scalability
+- meant for single player experience, not design for team collaboration(e.g. share tables/views)
+- not design for storing transactions.
+- If we have concurrent connections on the same duckDB, these connections must be `read-only`.
+- 
+
 
 ## How to download
 
