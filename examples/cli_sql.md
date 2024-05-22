@@ -1,25 +1,43 @@
-## Install the cli
+# Duck db cli demo
+
+## 1. Install the cli
+Goto the download [page](https://duckdb.org/docs/installation/index?version=stable&environment=cli&platform=linux&download_method=direct)
+
+```shell
+cd /home/pengfei/Tools/DuckDB
+
+wget https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip
+
+# unzip the bin
+unzip 
+```
 
 ## Start a duckdb instance
 
 ```shell
-# run a on disk mode duck db
-./duckdb /path/to/your/database.db
-
 # if you skip the path to db, the duckdb will run in memory mode
 ./duckdb
 
 # If DuckDB is already running, use the attach command to connect to a database.
-ATTACH DATABASE '/path/to/your/database.db' AS mydb;
+ATTACH DATABASE '/home/pengfei/data_set/demo_chu/demo_base/mydb.db' AS mydb;
 
+# show available database
+show databases;
+
+# show available tables
+show tables;
+
+# get table details
+select table_name, table_type from INFORMATION_SCHEMA.TABLES;
+
+# run a on disk mode duck db
+./duckdb /home/pengfei/data_set/demo_chu/demo_base/mydb.db
 ```
 
 ## Examine the existing table
 
 ```shell
-# get table details
 
-select table_name, table_type from INFORMATION_SCHEMA.TABLES;
 ```
 
 ## Create tables
