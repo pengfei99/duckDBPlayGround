@@ -36,3 +36,23 @@ DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OL
 ## How to download
 
 https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=win&download_method=package_manager
+
+## How to play the examples
+
+### Get the project source
+
+```shell
+git clone 
+```
+
+### Install a python virtual environment
+
+### Install the project dependencies
+
+```shell
+cd /path/to/duckDBPlayGround
+
+pip install -r requirements.txt 
+```
+
+### Run the notebook
