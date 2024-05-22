@@ -2,15 +2,15 @@
 
 This repo is for playing with duckdb and demo
 
-## What is duckDB?
+## 1. What is duckDB?
 
 DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OLAP DataBase Management System (DBMS)`, it can run `in-memory` or `on-disk` mode: 
 
 - embedded, in-process: means the DBMS features are running from within the application you’re trying to access from.
          You don't need to create a standalone dbms server.
 - OLAP/column oriented: means the database is designed for data analysis. It can not handle large transactional data.
-- vectorized processing?
-- MVCC(Multiversion concurrency control):
+- vectorized processing: Predicate pushdown and projection pushdown
+- MVCC(Multiversion concurrency control):  The MVCC implementation is inspired by the paper `Fast Serializable Multi-Version Concurrency Control for Main-Memory Database Systems` by Thomas Neumann, Tobias Mühlbauer and Alfons Kemper.
 - It provides command line client
 - API for python, R, Java, c/c++, node.js, etc.
 - Read various data format: parquet, csv, etc.
@@ -24,7 +24,7 @@ DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OL
 | Embedded   | SQLite, SolidDB   | DuckDB                |
 | Standalone | Mysql, Postgresql | Snowflake, clickhouse |
 
-## What are the limits of duckdb
+## 2. What are the limits of duckdb
 
 - runs on single machine(single process per db), not a distributed system. As a result, no horizontal scalability
 - meant for single player experience, not design for team collaboration(e.g. share tables/views)
@@ -33,16 +33,21 @@ DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OL
 
 
 
-## How to download
+## 3. How to play the examples
 
-https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=win&download_method=package_manager
+For the command line client demo. Just follow the instructions in [01.duckdb_cli.md](examples/01.duckdb_cli.md)
 
-## How to play the examples
+For the jupyter notebook demo. Follow the below instruction
+
+### Get the demo data
+
+The demo data can be download from:
+- 
 
 ### Get the project source
 
 ```shell
-git clone 
+git clone https://github.com/pengfei99/duckDBPlayGround.git
 ```
 
 ### Install a python virtual environment
