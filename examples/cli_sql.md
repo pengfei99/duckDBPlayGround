@@ -9,7 +9,7 @@ cd /home/pengfei/Tools/DuckDB
 wget https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip
 
 # unzip the bin
-unzip 
+unzip duckdb_cli-linux-amd64.zip
 ```
 
 ## Start a duckdb instance
@@ -30,23 +30,22 @@ show tables;
 # get table details
 select table_name, table_type from INFORMATION_SCHEMA.TABLES;
 
-# run a on disk mode duck db
-./duckdb /home/pengfei/data_set/demo_chu/demo_base/mydb.db
 ```
 
-## Examine the existing table
+We can also run the duckdb directly on disk mode
 
 ```shell
-
+# run a on disk mode duck db
+./duckdb /home/pengfei/data_set/demo_chu/demo_base/mydb.db
 ```
 
 ## Create tables
 
 ```shell
 # create a base table from a csv file
-CREATE TABLE sf_fire AS SELECT * FROM read_csv_auto('/home/pengfei/data_set/sf_fire/sf_fire.csv');
+CREATE OR REPLACE TABLE patho_csv AS SELECT * FROM read_csv_auto('/home/pengfei/data_set/demo_chu/pathologies.csv');
 
-CREATE OR REPLACE VIEW sf_fire_parquet AS SELECT * from read_parquet('/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet');
+CREATE OR REPLACE VIEW patho_parquet AS SELECT * from read_parquet('/home/pengfei/data_set/demo_chu/pathologies.parquet');
 ```
 
 ## Better sql experience
@@ -55,17 +54,32 @@ CREATE OR REPLACE VIEW sf_fire_parquet AS SELECT * from read_parquet('/home/peng
 
 ```shell
 # no select required,
-from sf_fire limit 10;
+from patho_parquet limit 10;
 
 # revert select
-from sf_fire select * limit 10;
+from patho_parquet select * limit 10;
 
 ```
 
 ### exclude from select
 
 ```shell
-from sf_fire select * exclude ("Unit ID","Call Number", "Call Type") limit 2;
+from patho_parquet select * exclude ("patho_niv2", "patho_niv3") limit 2;
+```
+
+### Replace column
+
+We can use the `replace` keyword to replace old column with new columns
+
+```shell
+select * exclude ('patho_niv2', 'patho_niv3') replace(CAST(annee AS INT) AS annee) FROM patho_parquet;
+
+```
+
+### Create a new view 
+
+```shell
+create or replace view patho_clean as select * exclude ("patho_niv2", "patho_niv3") replace(CAST(annee AS INT) AS annee) FROM patho_parquet;
 ```
 
 ### groupBy all
@@ -75,11 +89,14 @@ This can save us a lot of time, if the select is long
 
 ```shell
 # classic sql
-select City, CallType, count(*) as call_count  from sf_fire_parquet group by City, CallType limit 10;
+SELECT dept, sexe, annee, patho_niv1, SUM(ntop), AVG(npop)
+        FROM patho_clean
+        GROUP BY dept, sexe, annee, patho_niv1;
 
 # duck db simple sql
-select City, CallType, count(*) as call_count  from sf_fire_parquet group by all limit 10;
-
+SELECT dept, sexe, annee, patho_niv1, SUM(ntop), AVG(npop)
+        FROM patho_clean
+        GROUP BY ALL;
 ```
 
 ### Various display mode
@@ -112,5 +129,13 @@ By default, the output is printed on the stdout, we can change it to redirect ou
 
 # change it back to stdout
 .output
+```
+
+### Drop tables
+
+In memory mode, no need to drop tables
+
+```shell
+drop table patho_csv;
 ```
 
