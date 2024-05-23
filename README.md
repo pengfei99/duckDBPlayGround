@@ -52,7 +52,7 @@ The demo data can be downloaded from the below link:
 git clone https://github.com/pengfei99/duckDBPlayGround.git
 ```
 
-### Install a python virtual environment
+### 3.2 Install a python virtual environment
 
 Our code runs on python `3.11.8`. So we recommend you to use the same python version
 
@@ -65,7 +65,7 @@ source $VENV_PATH/bin/activate
 ```
 
 
-### Install the project dependencies
+### 3.3 Install the project dependencies
 
 ```shell
 cd /path/to/duckDBPlayGround
@@ -73,9 +73,11 @@ cd /path/to/duckDBPlayGround
 pip install -r requirements.txt 
 ```
 
-### Run the notebook
+### 3.3 Run the notebook
 
 ```shell
 # go to the project source folder, and run
 jupyter notebook
+
+# In the pop up web browser open the notebook
 ```
