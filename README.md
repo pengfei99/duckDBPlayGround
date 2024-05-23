@@ -37,7 +37,7 @@ DuckDB is a `light-weight, embedded(in-process), relational, column oriented, OL
 
 For the command line client demo. Just follow the instructions in [01.duckdb_cli.md](examples/01.duckdb_cli.md)
 
-For the jupyter notebook demo. Follow the below instruction
+For the jupyter notebook demo. Follow the below instructions
 
 ### Get the demo data
 
@@ -46,13 +46,24 @@ The demo data can be downloaded from the below link:
 - The [region shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_FRA_shp.zip)
 
 
-### Get the project source
+### 3.1 Get the project source
 
 ```shell
 git clone https://github.com/pengfei99/duckDBPlayGround.git
 ```
 
 ### Install a python virtual environment
+
+Our code runs on python `3.11.8`. So we recommend you to use the same python version
+
+```shell
+# create a virtual env
+python -m venv $VENV_PATH
+
+# activate virtual env
+source $VENV_PATH/bin/activate
+```
+
 
 ### Install the project dependencies
 
@@ -63,3 +74,8 @@ pip install -r requirements.txt
 ```
 
 ### Run the notebook
+
+```shell
+# go to the project source folder, and run
+jupyter notebook
+```
