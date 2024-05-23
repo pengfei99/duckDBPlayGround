@@ -41,8 +41,10 @@ For the jupyter notebook demo. Follow the below instruction
 
 ### Get the demo data
 
-The demo data can be download from:
-- 
+The demo data can be downloaded from the below link:
+- The [Pathologies by region and age](https://www.data.gouv.fr/fr/datasets/pathologies-effectif-de-patients-par-pathologie-sexe-classe-dage-et-territoire-departement-region/)
+- The [region shape file](https://geodata.ucdavis.edu/gadm/gadm4.1/shp/gadm41_FRA_shp.zip)
+
 
 ### Get the project source
 
