@@ -1,0 +1,81 @@
+---
+title: "duckdb_parquet"
+author: "pengfei"
+date: "2024-11-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## duckDB for parquet in R
+
+In this tuto, we will use r and duckdb to playwith parquet file and do some analytics.
+
+First we need to install the package
+
+```{r pressure, echo=FALSE}
+install.packages("duckdb")
+```
+
+## 1.Connect to a duckdb
+
+You can also embed plots, for example:
+
+```{r }
+# Load the DuckDB library
+library(duckdb)
+
+# Connect to DuckDB in-memory database
+conn <- dbConnect(duckdb::duckdb(), dbdir = ":memory:")
+
+# Load the Parquet file into a table
+patho_parquet_file_path <- "/mnt/hgfs/ubuntu_share/data_set/demo_chu/pathologies.parquet" # Replace with the actual file path
+dbExecute(conn, sprintf("CREATE TABLE pathologies AS SELECT * FROM parquet_scan('%s')", patho_parquet_file_path))
+
+# Fetch the first 5 rows
+result <- dbGetQuery(conn, "SELECT * FROM pathologies LIMIT 5")
+
+# Print the first 5 rows
+print("Les 5 premières lignes du fichier Parquet : ")
+print(result)
+```
+
+## 2. Get some basic stats of the dataset
+
+Get rows and columns number of the dataset
+
+```{r}
+# Nombre total de lignes dans la table
+total_rows <- dbGetQuery(conn, "SELECT COUNT(*) AS total_rows FROM pathologies")
+print("Nombre total de lignes : ")
+print(total_rows)
+
+# Nombre de colonnes dans la table
+total_columns <- dbGetQuery(conn, "
+  SELECT COUNT(*) AS total_columns 
+  FROM information_schema.columns 
+  WHERE table_name = 'pathologies'
+")
+print("Nombre total de colonnes : ")
+print(total_columns)
+```
+
+Get the dataset schema
+
+```{r}
+# Statistiques de base sur les colonnes
+column_stats <- dbGetQuery(conn, "
+    SELECT column_name, data_type
+    FROM information_schema.columns
+    WHERE table_name = 'pathologies'
+")
+
+print("Statistiques de base sur les colonnes :")
+print(column_stats)
+```
+
+
+``````
+## 3. 
