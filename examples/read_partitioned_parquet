@@ -1,0 +1,137 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "35bded20-aea3-46bb-951c-5e9d6299c96e",
+   "metadata": {},
+   "source": [
+    "# read partitioned data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "2a86ba57-5cf5-495c-9eaa-b8a5d89e33aa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pyspark.sql import SparkSession\n",
+    "import os\n",
+    "\n",
+    "local=True\n",
+    "if local:\n",
+    "    spark = SparkSession.builder\\\n",
+    "        .master(\"local[4]\")\\\n",
+    "        .appName(\"RepartitionAndCoalesce\")\\\n",
+    "        .config(\"spark.executor.memory\", \"2g\")\\\n",
+    "        .getOrCreate()\n",
+    "else:\n",
+    "    spark = SparkSession.builder\\\n",
+    "        .master(\"k8s://https://kubernetes.default.svc:443\")\\\n",
+    "        .appName(\"RepartitionAndCoalesce\")\\\n",
+    "        .config(\"spark.kubernetes.container.image\", \"inseefrlab/jupyter-datascience:master\")\\\n",
+    "        .config(\"spark.kubernetes.authenticate.driver.serviceAccountName\", os.environ['KUBERNETES_SERVICE_ACCOUNT'])\\\n",
+    "        .config(\"spark.executor.instances\", \"4\")\\\n",
+    "        .config(\"spark.executor.memory\",\"2g\")\\\n",
+    "        .config(\"spark.kubernetes.namespace\", os.environ['KUBERNETES_NAMESPACE'])\\\n",
+    "        .getOrCreate()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "0e423863-7148-4ed4-9484-5e5d4ec80539",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "csv_path=\"../data/people.csv\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "a94bd06f-9daa-4932-97a7-45431aa7fee9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "                                                                                "
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+---+----+---+----+---+\n",
+      "| id|name|sex|year|dep|\n",
+      "+---+----+---+----+---+\n",
+      "|  1|toto|  F|2002|  1|\n",
+      "|  2|toto|  F|2003|  1|\n",
+      "|  3|toto|  F|2004|  1|\n",
+      "|  4|titi|  M|2002|  2|\n",
+      "|  5|titi|  M|2003|  2|\n",
+      "+---+----+---+----+---+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "df=spark.read\\\n",
+    "    .options(header=True,inferSchema=True,delimiter=',',nullValue=\"?\")\\\n",
+    "    .csv(path=csv_path)\n",
+    "df.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "ea234c6b-8a32-485a-aa8e-515aeb2f8bdf",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "                                                                                "
+     ]
+    }
+   ],
+   "source": [
+    "output_path=\"../data/people_partiton\"\n",
+    "df.write.partitionBy(\"sex\",\"year\",\"dep\").mode(\"overwrite\").parquet(output_path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "609c9df1-3478-4dff-912f-467f637138e7",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
